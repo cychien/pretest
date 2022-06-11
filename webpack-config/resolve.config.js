@@ -1,8 +1,8 @@
-const path = require("path");
+const path = require('path')
 
 module.exports = {
-  extensions: ["*", ".js", ".jsx", ".json"],
+  extensions: ['*', '.js', '.jsx', '.json'],
   alias: {
-    "~": path.resolve(__dirname, "src"),
+    '~': path.resolve(__dirname, '../src'),
   },
-};
+}
