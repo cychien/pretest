@@ -6,7 +6,7 @@
     "dev": "webpack serve --config webpack.config.js",
     "build": "webpack --config webpack.config.production.js",
     "lint": "eslint --fix",
-    "format": "prettier --write .",
+    "format": "prettier --write",
     "lint-staged": "lint-staged",
     "prepare": "husky install"
   },
