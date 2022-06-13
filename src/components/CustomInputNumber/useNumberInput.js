@@ -1,12 +1,11 @@
 import * as React from 'react'
 import useCounter from '~/hooks/useCounter'
 import useKeepDoingWhenLongPress from './useKeepDoingWhenLongPress'
-
-const maxSafeInteger = Number.MAX_SAFE_INTEGER || 9007199254740991
+import { MAX_SAFE_INTEGER } from '~/constants/number'
 
 function useNumberInput({
   min = 0,
-  max = maxSafeInteger,
+  max = MAX_SAFE_INTEGER,
   step = 1,
   name,
   value,
@@ -18,7 +17,7 @@ function useNumberInput({
   const incrementButtonRef = React.useRef()
   const decrementButtonRef = React.useRef()
 
-  const [counter, incrementFn, decrementFn, updateFn, setCounterValue] =
+  const [counter, incrementFn, decrementFn, updateFn, setCounterValueFn] =
     useCounter(value || min, {
       step,
       min,
@@ -47,26 +46,18 @@ function useNumberInput({
   )
 
   const increment = React.useCallback(() => {
-    const value = incrementFn()
-    if (value) {
-      callOnChangeProps(value)
+    const { prev, next } = incrementFn()
+    if (next !== prev) {
+      callOnChangeProps(next)
     }
   }, [callOnChangeProps, incrementFn])
 
   const decrement = React.useCallback(() => {
-    const value = decrementFn()
-    if (value) {
-      callOnChangeProps(value)
+    const { prev, next } = decrementFn()
+    if (next !== prev) {
+      callOnChangeProps(next)
     }
   }, [callOnChangeProps, decrementFn])
-
-  const update = React.useCallback(
-    (val) => {
-      setCounterValue(val)
-      callOnChangeProps(val)
-    },
-    [callOnChangeProps, setCounterValue]
-  )
 
   const longPressIncrementEvents = useKeepDoingWhenLongPress(
     increment,
@@ -80,9 +71,12 @@ function useNumberInput({
   const onInputChange = React.useCallback(
     (e) => {
       const sanitizedValue = sanitize(e.target.value)
-      update(sanitizedValue)
+      const { prev, next } = setCounterValueFn(sanitizedValue)
+      if (next !== prev) {
+        callOnChangeProps(sanitizedValue)
+      }
     },
-    [sanitize, update]
+    [callOnChangeProps, sanitize, setCounterValueFn]
   )
 
   const onInputBlur = React.useCallback(
@@ -96,12 +90,12 @@ function useNumberInput({
         !incrementButtonRef.current.contains(clickTarget) &&
         !decrementButtonRef.current.contains(clickTarget)
       ) {
-        const value = updateFn(counter.valueAsNumber)
+        const { next } = updateFn(counter.valueAsNumber)
         if (onBlurProps) {
           onBlurProps({
             target: {
               name,
-              value,
+              value: next,
             },
           })
         }

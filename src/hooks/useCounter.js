@@ -1,110 +1,70 @@
 import * as React from 'react'
+import { MAX_SAFE_INTEGER } from '~/constants/number'
 
-const maxSafeInteger = Number.MAX_SAFE_INTEGER || 9007199254740991
+function formatStringAsNumber(str) {
+  const validString = str.toString().replace(/\s/g, '')
+  return parseInt(validString, 10)
+}
 
 function useCounter(initialValue = 0, customOptions) {
   const defaultOptions = {
     step: 1,
     min: 0,
-    max: maxSafeInteger,
+    max: MAX_SAFE_INTEGER,
   }
 
   const options = { ...defaultOptions, ...customOptions }
 
   const [value, setValue] = React.useState(initialValue)
-  const valueAsNumber = value === '' ? 0 : parseInt(value, 10)
+  const valueAsNumber = formatStringAsNumber(value)
   const isAtMax = valueAsNumber + options.step > options.max
   const isAtMin = valueAsNumber - options.step < options.min
 
-  const isValidValue = React.useCallback(
-    (valueAsNumber) =>
-      valueAsNumber >= options.min && valueAsNumber <= options.max,
-    [options.max, options.min]
-  )
-
   const increment = React.useCallback(() => {
-    if (isValidValue(valueAsNumber)) {
-      let next
-      if (valueAsNumber < options.min) {
-        next = options.min
-      } else if (isAtMax) {
-        next = valueAsNumber
-      } else {
-        next = valueAsNumber + options.step
-      }
-      setValue(next.toString())
-      return next.toString()
+    const prevValueAsNumber = valueAsNumber.toString()
+
+    let next
+    if (isNaN(valueAsNumber)) {
+      next = options.min
+    } else if (valueAsNumber > options.max) {
+      next = options.max
+    } else if (valueAsNumber < options.min) {
+      next = options.min
+    } else {
+      next = isAtMax ? valueAsNumber : valueAsNumber + options.step
     }
 
-    if (!isValidValue(valueAsNumber)) {
-      let next
-      if (valueAsNumber > options.max) {
-        next = options.max
-      } else if (valueAsNumber < options.min) {
-        next = options.min
-      } else {
-        next = options.min
-      }
-
-      setValue(next.toString())
-      return next.toString()
-    }
-  }, [
-    isAtMax,
-    isValidValue,
-    options.max,
-    options.min,
-    options.step,
-    valueAsNumber,
-  ])
+    setValue(next.toString())
+    return { prev: prevValueAsNumber, next: next.toString() }
+  }, [isAtMax, options.max, options.min, options.step, valueAsNumber])
 
   const decrement = React.useCallback(() => {
-    if (isValidValue(valueAsNumber)) {
-      let next
-      if (valueAsNumber > options.max) {
-        next = options.max
-      } else if (isAtMin) {
-        next = valueAsNumber
-      } else {
-        next = valueAsNumber - options.step
-      }
-      setValue(next.toString())
-      return next.toString()
+    const prevValueAsNumber = valueAsNumber.toString()
+
+    let next
+    if (isNaN(valueAsNumber)) {
+      next = options.min
+    } else if (valueAsNumber > options.max) {
+      next = options.max
+    } else if (valueAsNumber < options.min) {
+      next = options.min
+    } else {
+      next = isAtMin ? valueAsNumber : valueAsNumber - options.step
     }
 
-    if (!isValidValue(valueAsNumber)) {
-      let next
-      if (valueAsNumber > options.max) {
-        next = options.max
-      } else if (valueAsNumber < options.min) {
-        next = options.min
-      } else {
-        next = options.min
-      }
-
-      setValue(next.toString())
-      return next.toString()
-    }
-  }, [
-    isAtMin,
-    isValidValue,
-    options.max,
-    options.min,
-    options.step,
-    valueAsNumber,
-  ])
+    setValue(next.toString())
+    return { prev: prevValueAsNumber, next: next.toString() }
+  }, [isAtMin, options.max, options.min, options.step, valueAsNumber])
 
   const update = React.useCallback(
     (val) => {
-      const valAsNumber = val === '' ? 0 : parseInt(val, 10)
+      const valAsNumber = formatStringAsNumber(val)
+      const prevValueAsNumber = valueAsNumber.toString()
 
       let next
-
       if (isNaN(valAsNumber)) {
         next = options.min
-      }
-
-      if (valAsNumber < options.min) {
+      } else if (valAsNumber < options.min) {
         next = options.min
       } else if (valAsNumber > options.max) {
         next = options.max
@@ -113,9 +73,18 @@ function useCounter(initialValue = 0, customOptions) {
       }
 
       setValue(next.toString())
-      return next.toString()
+      return { prev: prevValueAsNumber, next: next.toString() }
     },
-    [options.max, options.min]
+    [options.max, options.min, valueAsNumber]
+  )
+
+  const setCounterValue = React.useCallback(
+    (val) => {
+      const prevValue = value.toString()
+      setValue(val.toString())
+      return { prev: prevValue, next: val.toString() }
+    },
+    [value]
   )
 
   return [
@@ -123,7 +92,7 @@ function useCounter(initialValue = 0, customOptions) {
     increment,
     decrement,
     update,
-    setValue,
+    setCounterValue,
   ]
 }
 
