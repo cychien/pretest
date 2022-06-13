@@ -2,10 +2,12 @@ import * as React from 'react'
 import produce from 'immer'
 
 function correct(value, min, max) {
+  if (isNaN(value)) {
+    return min
+  }
   if (value < min) {
     return min
   }
-
   if (value > max) {
     return max
   }
@@ -18,35 +20,37 @@ function RoomAllocationReducer(state, action) {
     case 'change-adult': {
       const { index, value } = action.payload
       return produce(state, (draft) => {
-        const valueAsNumber = value === '' ? 0 : parseInt(value, 10)
+        const validString = value.toString().replace(/\s/g, '')
+        const valueAsNumber = parseInt(validString, 10)
 
         const max = Math.min(
           state.waitToAllocate + state.allocation[index].adult,
           4 - state.allocation[index].child
         )
 
-        const validValue = correct(valueAsNumber, 1, max)
+        const validValueAsNumber = correct(valueAsNumber, 1, max)
 
-        const diff = validValue - state.allocation[index].adult
+        const diff = validValueAsNumber - state.allocation[index].adult
         draft.waitToAllocate = state.waitToAllocate - diff
-        draft.allocation[index].adult = validValue
+        draft.allocation[index].adult = validValueAsNumber
       })
     }
     case 'change-child': {
       const { index, value } = action.payload
       return produce(state, (draft) => {
-        const valueAsNumber = value === '' ? 0 : parseInt(value, 10)
+        const validString = value.toString().replace(/\s/g, '')
+        const valueAsNumber = parseInt(validString, 10)
 
         const max = Math.min(
           state.waitToAllocate + state.allocation[index].child,
           4 - state.allocation[index].adult
         )
 
-        const validValue = correct(valueAsNumber, 0, max)
+        const validValueAsNumber = correct(valueAsNumber, 0, max)
 
-        const diff = validValue - state.allocation[index].child
+        const diff = validValueAsNumber - state.allocation[index].child
         draft.waitToAllocate = state.waitToAllocate - diff
-        draft.allocation[index].child = validValue
+        draft.allocation[index].child = validValueAsNumber
       })
     }
   }
