@@ -1,5 +1,7 @@
 # Pretest
 
+Quick look: [https://pretest-flame.vercel.app/](https://pretest-flame.vercel.app/)
+
 ## Requirements
 
 In order to run this app locally, you will need:
