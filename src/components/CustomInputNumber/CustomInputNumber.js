@@ -17,7 +17,7 @@ function CustomInputNumber(props) {
 const IncrementButton = React.forwardRef((props, ref) => (
   <button
     ref={ref}
-    className="w-2xl h-2xl flex justify-center items-center border border-primary-500 bg-white text-primary-500 rounded hover:bg-primary-50 disabled:opacity-30 disabled:bg-white disabled:cursor-not-allowed"
+    className="min-w-[48px] min-h-[48px] w-2xl h-2xl flex justify-center items-center border border-primary-500 bg-white text-primary-500 rounded select-none hover:bg-primary-50 disabled:opacity-30 disabled:bg-white disabled:cursor-not-allowed"
     {...props}
   >
     <svg
@@ -36,7 +36,7 @@ const IncrementButton = React.forwardRef((props, ref) => (
 const DecrementButton = React.forwardRef((props, ref) => (
   <button
     ref={ref}
-    className="w-2xl h-2xl flex justify-center items-center border border-primary-500 bg-white text-primary-500 rounded hover:bg-primary-50 disabled:opacity-30 disabled:bg-white disabled:cursor-not-allowed"
+    className="min-w-[48px] min-h-[48px] w-2xl h-2xl flex justify-center items-center border border-primary-500 bg-white text-primary-500 rounded select-none hover:bg-primary-50 disabled:opacity-30 disabled:bg-white disabled:cursor-not-allowed"
     {...props}
   >
     <svg
@@ -55,7 +55,7 @@ const DecrementButton = React.forwardRef((props, ref) => (
 const InputField = React.forwardRef((props, ref) => (
   <input
     ref={ref}
-    className="w-2xl h-2xl border border-gray-400 bg-white rounded text-center focus:outline-none focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed"
+    className="min-w-[48px] min-h-[48px] w-2xl h-2xl border border-gray-400 bg-white rounded text-center focus:outline-none focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed"
     {...props}
   />
 ))

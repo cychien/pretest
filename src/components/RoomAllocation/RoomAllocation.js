@@ -7,7 +7,7 @@ function RoomAllocation(props) {
   const { guest, room, roomAllocation, getRoomProps } = useRoomAllocation(props)
 
   return (
-    <div className="p-md">
+    <div>
       <div className="mb-md font-medium">
         住客人數：<span className="font-mono">{guest}</span> 人 /{' '}
         <span className="font-mono">{room}</span> 房
