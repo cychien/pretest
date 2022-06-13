@@ -45,6 +45,7 @@ function useNumberInput({
     [name, onChangeProps]
   )
 
+  // Call onChange props only when value changes
   const increment = React.useCallback(() => {
     const { prev, next } = incrementFn()
     if (next !== prev) {

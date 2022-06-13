@@ -16,6 +16,7 @@ function useCounter(initialValue = 0, customOptions) {
   const options = { ...defaultOptions, ...customOptions }
 
   const [value, setValue] = React.useState(initialValue)
+  // valueAsNumber may be NaN or number type
   const valueAsNumber = formatStringAsNumber(value)
   const isAtMax = valueAsNumber + options.step > options.max
   const isAtMin = valueAsNumber - options.step < options.min
@@ -24,6 +25,7 @@ function useCounter(initialValue = 0, customOptions) {
     const prevValueAsNumber = valueAsNumber.toString()
 
     let next
+    // If we can't recognize the input value, we will turn it to min
     if (isNaN(valueAsNumber)) {
       next = options.min
     } else if (valueAsNumber > options.max) {

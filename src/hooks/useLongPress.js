@@ -26,6 +26,7 @@ export default function useLongPress(
     }
   }, [onLongPressEnd, timer])
 
+  // If clicked element turn into disabled, we will terminate this longPress session as well
   React.useEffect(() => {
     let observer
     if (timer && ref) {

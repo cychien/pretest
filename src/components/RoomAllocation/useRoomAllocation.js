@@ -20,6 +20,10 @@ function RoomAllocationReducer(state, action) {
     case 'change-adult': {
       const { index, value } = action.payload
       return produce(state, (draft) => {
+        /**
+         * Due to behavior of NumberInput, value passed in here may be invalid (ex. '005', '555', '-5'),
+         * so we need to correct this before calling onChange props.
+         */
         const validString = value.toString().replace(/\s/g, '')
         const valueAsNumber = parseInt(validString, 10)
 

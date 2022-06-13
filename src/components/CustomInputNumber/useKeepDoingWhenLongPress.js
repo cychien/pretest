@@ -20,6 +20,7 @@ export default function useKeepDoingWhenLongPress(action, ref, customOptions) {
   }, [])
 
   const intervalRef = React.useRef()
+  // Avoid interval being interrupted when action changes
   const savedAction = React.useRef(action)
 
   React.useEffect(() => {
