@@ -32,35 +32,6 @@ function useNumberInput({
       .join('')
   }, [])
 
-  React.useEffect(() => {
-    function handleClickOutside(e) {
-      if (
-        inputRef.current &&
-        incrementButtonRef.current &&
-        decrementButtonRef.current &&
-        !inputRef.current.contains(e.target) &&
-        !incrementButtonRef.current.contains(e.target) &&
-        !decrementButtonRef.current.contains(e.target)
-      ) {
-        const value = updateFn(counter.valueAsNumber)
-        if (onBlurProps) {
-          onBlurProps({
-            target: {
-              name,
-              value,
-            },
-          })
-        }
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [counter.valueAsNumber, name, onBlurProps, updateFn])
-
   const callOnChangeProps = React.useCallback(
     (value) => {
       if (onChangeProps) {
@@ -112,6 +83,31 @@ function useNumberInput({
       update(sanitizedValue)
     },
     [sanitize, update]
+  )
+
+  const onInputBlur = React.useCallback(
+    (e) => {
+      const clickTarget = e.relatedTarget ?? document
+      if (
+        inputRef.current &&
+        incrementButtonRef.current &&
+        decrementButtonRef.current &&
+        !inputRef.current.contains(clickTarget) &&
+        !incrementButtonRef.current.contains(clickTarget) &&
+        !decrementButtonRef.current.contains(clickTarget)
+      ) {
+        const value = updateFn(counter.valueAsNumber)
+        if (onBlurProps) {
+          onBlurProps({
+            target: {
+              name,
+              value,
+            },
+          })
+        }
+      }
+    },
+    [counter.valueAsNumber, name, onBlurProps, updateFn]
   )
 
   const onInputKeyDown = React.useCallback(
@@ -173,6 +169,7 @@ function useNumberInput({
       value: counter.value,
       disabled,
       onChange: onInputChange,
+      onBlur: onInputBlur,
       onKeyDown: onInputKeyDown,
       ref: inputRef,
     }),
@@ -184,6 +181,7 @@ function useNumberInput({
       counter.value,
       disabled,
       onInputChange,
+      onInputBlur,
       onInputKeyDown,
     ]
   )
