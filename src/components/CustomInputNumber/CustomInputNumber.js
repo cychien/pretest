@@ -6,7 +6,7 @@ function CustomInputNumber(props) {
     useNumberInput(props)
 
   return (
-    <div className="flex space-x-sm items-center">
+    <div className="flex space-x-xs items-center">
       <DecrementButton {...decrementButtonProps} />
       <InputField {...inputFieldProps} />
       <IncrementButton {...incrementButtonProps} />
@@ -14,7 +14,6 @@ function CustomInputNumber(props) {
   )
 }
 
-// eslint-disable-next-line react/display-name
 const IncrementButton = React.forwardRef((props, ref) => (
   <button
     ref={ref}
@@ -36,7 +35,6 @@ const IncrementButton = React.forwardRef((props, ref) => (
   </button>
 ))
 
-// eslint-disable-next-line react/display-name
 const DecrementButton = React.forwardRef((props, ref) => (
   <button
     ref={ref}
@@ -58,7 +56,6 @@ const DecrementButton = React.forwardRef((props, ref) => (
   </button>
 ))
 
-// eslint-disable-next-line react/display-name
 const InputField = React.forwardRef((props, ref) => (
   <input
     ref={ref}
@@ -66,5 +63,9 @@ const InputField = React.forwardRef((props, ref) => (
     {...props}
   />
 ))
+
+IncrementButton.displayName = 'IncrementButton'
+DecrementButton.displayName = 'DecrementButton'
+InputField.displayName = 'InputField'
 
 export default CustomInputNumber

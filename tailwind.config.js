@@ -27,6 +27,7 @@ module.exports = {
       primary: colors.sky,
       gray: colors.slate,
       white: colors.white,
+      success: colors.emerald,
     },
     fontWeight: {
       normal: 400,

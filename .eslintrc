@@ -6,6 +6,9 @@
     "plugin:react-hooks/recommended",
     "prettier"
   ],
+  "rules": {
+    "react/prop-types": "off"
+  },
   "env": {
     "browser": true,
     "node": true
